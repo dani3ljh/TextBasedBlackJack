@@ -31,7 +31,7 @@ class Program
 		
 		Console.Clear();
 		
-		int playerCount = GetInput.GetIntInput("How many players? ", 1, MAX_PLAYERS);
+		int playerCount = GetInput.GetIntInputWithRange("How many players? ", 1, MAX_PLAYERS);
 		
 		Console.Clear();
 		
@@ -53,13 +53,14 @@ class Program
 		}
 	}
 	
-	private static void SetupGame(int playerC = 2)
+	private static void SetupGame(int playerCount = 2)
 	{
-		playerCount = playerC;
+		Program.playerCount = playerCount;
 		currentPlayer = 0;
 		turn = 0;
 		
 		deck = new BlackJackDeck();
+		playerHands = new List<BlackJackDeck>();
 		
 		for (int i = 0; i < playerCount; i++) {
 			playerHands.Add(new BlackJackDeck(false));
@@ -69,6 +70,7 @@ class Program
 		foreach (BlackJackDeck hand in playerHands) {
 			BlackJackCard card = deck[0];
 			card.IsFaceUp = false;
+			hand.Add(card);
 			deck.RemoveAt(0);
 		}
 		
@@ -76,8 +78,11 @@ class Program
 		foreach (BlackJackDeck hand in playerHands) {
 			BlackJackCard card = deck[0];
 			card.IsFaceUp = true;
+			hand.Add(card);
 			deck.RemoveAt(0);
 		}
+		
+		Console.WriteLine($"Player Hand 1: {playerHands[0].Count} cards");
 	}
 	
 	private static void GameRound()
@@ -95,16 +100,9 @@ class Program
 		// If player has Ace up and is first turn, ask for value
 		if (turn == 0 && playerHand[1].Name == "Ace")
 		{
-			while(true)
-			{
-				Console.WriteLine($"Player {currentPlayer+1} has an Ace up, what value would you like it to be? (1 or 11): ");
-				string? input = Console.ReadLine();
-				int value;
-				if (int.TryParse(input, out value) && (value == 1 || value == 11)) {
-					playerHand[1].Value = value;
-					break;
-				}
-			}
+			int value = GetInput.GetIntInputWithValues("Player {currentPlayer+1} has an Ace up, what value would you like it to be? (1 or 11): ", new List<int> {1, 11});
+			
+			playerHand[1].Value = value;
 		}
 		
 	}
