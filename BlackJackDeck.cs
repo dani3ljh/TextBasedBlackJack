@@ -94,6 +94,26 @@ class BlackJackDeck : List<BlackJackCard>
 			this[randomIndex] = temp;
 		}
 	}
+	
+	override public string ToString()
+	{
+		string output = "";
+		
+		// check card.NameStartsWithVowelSound and make sure to add , and to the end of the string
+		
+		for (int i = 0; i < Count; i++) {
+			output += this[i].Name + " of " + this[i].Suit;
+			if (i != Count - 2) {
+				output += ", ";
+				continue;
+			}
+			if (i == Count - 2) {
+				output += ", and ";
+			}
+		}
+		
+		return output;
+	}
 }
 
 }

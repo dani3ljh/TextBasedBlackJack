@@ -7,6 +7,13 @@ class BlackJackCard
 	public int Value { get; set; }
 	public string Name { get; set; } 
 	public bool IsFaceUp { get; set; }
+	public bool NameStartsWithVowelSound { get; set; }
+	
+	private static readonly List<string> VowelSoundsInCards = new List<string> 
+	{
+		"8",
+		"Ace",
+	};
 	
 	public BlackJackCard(Suit suit, int value, string name, bool isFaceUp = false)
 	{
@@ -14,6 +21,7 @@ class BlackJackCard
 		Value = value;
 		Name = name;
 		IsFaceUp = isFaceUp;
+		NameStartsWithVowelSound = VowelSoundsInCards.Contains(Name);
 	}
 	
 	public bool IsValidCard()

@@ -50,6 +50,7 @@ class Program
 		
 		while (!isGameOver) {
 			GameRound();
+			if (turn != 0) break; // Temp
 		}
 	}
 	
@@ -81,8 +82,6 @@ class Program
 			hand.Add(card);
 			deck.RemoveAt(0);
 		}
-		
-		Console.WriteLine($"Player Hand 1: {playerHands[0].Count} cards");
 	}
 	
 	private static void GameRound()
@@ -91,20 +90,24 @@ class Program
 		
 		BlackJackDeck playerHand = playerHands[currentPlayer];
 		
-		Console.Write($"Player {currentPlayer+1} has ");
-		foreach (BlackJackCard card in playerHand) {
-			Console.Write($"{card.Name} of {card.Suit}, ");
-		}
+		Console.WriteLine($"Player {currentPlayer+1} has {playerHand.ToString()}");
 		
 		// Dont have to test for initial 21 here because it is done in the main loop
 		// If player has Ace up and is first turn, ask for value
-		if (turn == 0 && playerHand[1].Name == "Ace")
+		// Also if the player has both aces then you dont need to ask for value
+		if (turn == 0 && playerHand[1].Name == "Ace" && playerHand[0].Name != "Ace")
 		{
-			int value = GetInput.GetIntInputWithValues("Player {currentPlayer+1} has an Ace up, what value would you like it to be? (1 or 11): ", new List<int> {1, 11});
+			int value = GetInput.GetIntInputWithValues($"Player {currentPlayer+1} has an Ace up, what value would you like it to be? (1 or 11): ", new List<int> {1, 11});
 			
 			playerHand[1].Value = value;
 		}
 		
+		currentPlayer++;
+		
+		if (currentPlayer >= playerCount) {
+			currentPlayer = 0;
+			turn++;
+		}
 	}
 }
 
