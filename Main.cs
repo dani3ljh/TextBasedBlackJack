@@ -5,7 +5,7 @@ enum Suit { Clubs, Diamonds, Hearts, Spades }
 
 class Program
 {
-	private static readonly int MAX_PLAYERS = 4;
+	private static readonly int MAX_PLAYERS = 5;
 	
 	private static BlackJackDeck deck = new BlackJackDeck();
 	private static List<BlackJackDeck> playerHands = new List<BlackJackDeck>();
@@ -54,6 +54,32 @@ class Program
 		}
 	}
 	
+	private static void GameRound()
+	{
+		if (isGameOver) return;
+		
+		BlackJackDeck playerHand = playerHands[currentPlayer];
+		
+		Console.WriteLine($"Player {currentPlayer+1} has {playerHand.ToString()}");
+		
+		// Dont have to test for initial 21 here because it is done in the main loop
+		// If player has Ace up and is first turn, ask for value
+		// Also if the player has both aces then you dont need to ask for value
+		if (turn == 0 && playerHand[1].Name == "Ace" && playerHand[0].Name != "Ace")
+		{
+			int value = GetInput.GetIntInputWithValues($"Player {currentPlayer+1} has an Ace up, what value would you like it to be? (1 or 11): ", new List<int> {1, 11});
+			
+			playerHand[1].Value = value;
+		}
+		
+		currentPlayer++;
+		
+		if (currentPlayer >= playerCount) {
+			currentPlayer = 0;
+			turn++;
+		}
+	}
+	
 	private static void SetupGame(int playerCount = 2)
 	{
 		Program.playerCount = playerCount;
@@ -81,32 +107,6 @@ class Program
 			card.IsFaceUp = true;
 			hand.Add(card);
 			deck.RemoveAt(0);
-		}
-	}
-	
-	private static void GameRound()
-	{
-		if (isGameOver) return;
-		
-		BlackJackDeck playerHand = playerHands[currentPlayer];
-		
-		Console.WriteLine($"Player {currentPlayer+1} has {playerHand.ToString()}");
-		
-		// Dont have to test for initial 21 here because it is done in the main loop
-		// If player has Ace up and is first turn, ask for value
-		// Also if the player has both aces then you dont need to ask for value
-		if (turn == 0 && playerHand[1].Name == "Ace" && playerHand[0].Name != "Ace")
-		{
-			int value = GetInput.GetIntInputWithValues($"Player {currentPlayer+1} has an Ace up, what value would you like it to be? (1 or 11): ", new List<int> {1, 11});
-			
-			playerHand[1].Value = value;
-		}
-		
-		currentPlayer++;
-		
-		if (currentPlayer >= playerCount) {
-			currentPlayer = 0;
-			turn++;
 		}
 	}
 }
