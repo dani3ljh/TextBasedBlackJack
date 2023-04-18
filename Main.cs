@@ -62,12 +62,13 @@ class Program
 		
 		Console.WriteLine($"Player {currentPlayer+1} has {playerHand.ToString()}");
 		
-		// Dont have to test for initial 21 here because it is done in the main loop
+		// Dont have to test for initial 21 here because it is done in the main method
 		// If player has Ace up and is first turn, ask for value
 		// Also if the player has both aces then you dont need to ask for value
 		if (turn == 0 && playerHand[1].Name == "Ace" && playerHand[0].Name != "Ace")
 		{
-			int value = GetInput.GetIntInputWithValues($"Player {currentPlayer+1} has an Ace up, what value would you like it to be? (1 or 11): ", new List<int> {1, 11});
+			String prompt = $"Player {currentPlayer+1} has an Ace up, what value would you like it to be? (1 or 11): ";
+			int value = GetInput.GetIntInputWithValues(prompt, new List<int> {1, 11});
 			
 			playerHand[1].Value = value;
 		}
